@@ -8,6 +8,9 @@ import { NextSeo } from 'next-seo'
 import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { GetServerSideProps } from 'next'
+import { getServerSession } from 'next-auth'
+import { buildNextAuthOptions } from '../api/auth/[...nextauth].api'
 
 export default function Home() {
   const session = useSession()
@@ -47,4 +50,17 @@ export default function Home() {
       </Container>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = await getServerSession(
+    req,
+    res,
+    buildNextAuthOptions(req, res),
+  )
+  return {
+    props: {
+      session,
+    },
+  }
 }
