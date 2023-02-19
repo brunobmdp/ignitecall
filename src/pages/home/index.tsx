@@ -5,8 +5,21 @@ import previewImage from '../../assets/app-preview.png'
 import Image from 'next/image'
 import { ClaimUsernameForm } from './components/ClaimUsernameForm'
 import { NextSeo } from 'next-seo'
+import { useSession } from 'next-auth/react'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 export default function Home() {
+  const session = useSession()
+  const isSignedIn = session.status === 'authenticated'
+  const router = useRouter()
+
+  useEffect(() => {
+    if (isSignedIn) {
+      router.push(`/schedule/${session.data.user.username}`)
+    }
+    console.log('passou')
+  }, [isSignedIn, router, session.data?.user.username])
   return (
     <>
       <NextSeo
